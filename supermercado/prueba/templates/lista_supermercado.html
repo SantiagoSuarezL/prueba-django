@@ -1,0 +1,131 @@
+<!-- templates/lista_supermercado.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Supermercado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #d7f873;
+            padding: 20px;
+        }
+        h1 {
+           display: flex;
+           justify-content: center;
+           color: #343412;
+           font-size: 3rem;
+        }
+        section{
+            display: flex;
+            justify-content: center;
+            column-gap: 15%;
+            background-color: #91cd5d;
+            border-radius: 10px;
+            padding: 30px 0 30px;
+        }
+        h2 {
+           display: flex;
+           justify-content: center;
+           color: #343412;
+        }
+        form {
+            color: #343412;
+            
+        }
+        button{
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #ffffff;
+        }
+        button:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+            transition: background-color 0.3s ease;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 5px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            border: 2px solid #343412;
+            border-radius: 5px;
+            background-color: #f3f3f3;
+            font-size: 1rem;
+            color: #343412;
+        }
+        .custom-checkbox {
+            appearance: none;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background-color: yellow;
+        }
+        input[type="checkbox"]:checked + label {
+            text-decoration: line-through;
+            color: #464646;
+        }
+        select {
+            background-color: #f3f3f3;
+            color: #343412;
+            padding: 5px;
+            font-size: 1rem;
+            border: 2px solid #343412;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        h3 {
+            color: #343412;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Supermercado</h1>
+    
+    <section>
+        <div>
+            <h2>Agregar Nueva Lista</h2>
+            <form method="post" action="">
+                {% csrf_token %}
+                {{ lista_form.as_p }}
+                <button type="submit" name="add_list">Agregar Lista</button>
+            </form>
+        </div>
+    
+        <div>
+            <h2>Agregar Producto</h2>
+            <form method="post" action="">
+                {% csrf_token %}
+                {{ producto_form.as_p }}
+                <button type="submit" name="add_product">Agregar Producto</button>
+            </form>
+        </div>
+    
+        <div>
+            <h2>Listas Creadas</h2>
+            {% for lista in listas %}
+                <h3>{{ lista.nombre }}</h3>
+                <ul>
+                    {% for producto in lista.productos.all %}
+                        <li>
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="toggle" value="{{ producto.id }}">
+                                <input type="checkbox" onchange="this.form.submit();" {% if producto.marcado %}checked{% endif %}>
+                                <label for="product-{{ producto.id }}" class="product-label">
+                                    {{ producto.nombre }} - ${{ producto.precio }}
+                                </label>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        
+            <h3>Total: ${{ total }}</h3>
+        </div>
+    </section>
+</body>
+</html>
