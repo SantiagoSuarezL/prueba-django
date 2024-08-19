@@ -18,6 +18,7 @@ def lista_supermercado(request):
         lista_form = ListaForm()
         producto_form = ProductoForm()
 
+
     if request.method == 'POST' and 'toggle' in request.POST:
         producto_id = request.POST.get('toggle')
         producto = get_object_or_404(Producto, id=producto_id)
@@ -37,9 +38,3 @@ def lista_supermercado(request):
         'producto_form': producto_form,
     }
     return render(request, 'lista_supermercado.html', context)
-
-def toggle_producto(request, producto_id):
-    producto = get_object_or_404(Producto, id=producto_id)
-    producto.marcado = not producto.marcado
-    producto.save()
-    return redirect('lista_supermercado')
